@@ -1,5 +1,6 @@
 import pandas as pd
-
+import math
+import logging
 
 def remove_extra_element(row):
     if 'goals_against_while_last_defender' in row:
@@ -109,16 +110,42 @@ def combine_clean_dfs(blue_df, orange_df, car_dummies):
 
 
 def get_random_ids():
+    logger = logging.getLogger(__name__)
+    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    logging.basicConfig(filename = 'logging_info.log', level=logging.INFO, force=True, format=log_fmt)
+    logger.info('starting pull')
     minmax_rank_lst = [['bronze-1', 'bronze-3'], ['silver-1', 'silver-3'], ['gold-1', 'gold-3'], ['platinum-1', 'platinum-3'], ['diamond-1', 'diamond-3'], ['champion-1', 'champion-3'], ['champion-3', 'grand-champion']]
     replay_ids = []
     ids_pulled = []
     for i in range(len(minmax_rank_lst)):
+        logger.info(f'pulling min_rank={minmax_rank_lst[i][0]}, max_rank = {minmax_rank_lst[i][1]}')
         r = requests.get(f'https://ballchasing.com/api/replays?&count=200&playlist=ranked-standard&min-rank={minmax_rank_lst[i][0]}&max-rank={minmax_rank_lst[i][1]}', headers={'Authorization': 'gMXy4BUhXt0OQhc37kJV5KP0GUyLzhJeZhogpa94'})
         d = r.json()
         rank_ids = []
+        logger.info(f'count = {d["count"]})
         for i in range(len(d['list'])):
             rank_ids.append(d['list'][i]['id'])
-        replay_ids.append(rank_ids)
         next_link = d['next']
+        if i == 6 or i == 5:
+            logger.info('i == 5 or 6, moving on')
+            replay_ids.append(rank_ids)
+            continue 
+
+        logger.info('starting second pull')
+        r = requests.get(next_link, headers={'Authorization': 'gMXy4BUhXt0OQhc37kJV5KP0GUyLzhJeZhogpa94'})
+        d = r.json()
+        for i in range(len(d['list'])):
+            rank_ids.append(d['list'][i]['id'])
+        next_link = d['next']
+
+        logger.info('starting third pull')
+        r = requests.get(next_link, headers={'Authorization': 'gMXy4BUhXt0OQhc37kJV5KP0GUyLzhJeZhogpa94'})
+        d = r.json()
+        for i in range(len(d['list'])):
+            rank_ids.append(d['list'][i]['id'])
+        logger.info('rank pull complete.. appending results and moving to next rank') 
+        replay_ids.append(rank_ids)
+
     flat_list = [item for sublist in replay_ids for item in sublist]
     return flat_list
+
