@@ -122,7 +122,8 @@ def get_random_ids():
         r = requests.get(f'https://ballchasing.com/api/replays?&count=200&playlist=ranked-standard&min-rank={minmax_rank_lst[i][0]}&max-rank={minmax_rank_lst[i][1]}', headers={'Authorization': 'gMXy4BUhXt0OQhc37kJV5KP0GUyLzhJeZhogpa94'})
         d = r.json()
         rank_ids = []
-        logger.info(f'count = {d["count"]})
+        count = d['count']
+        logger.info(f'count = {count}')
         for i in range(len(d['list'])):
             rank_ids.append(d['list'][i]['id'])
         next_link = d['next']
@@ -149,3 +150,31 @@ def get_random_ids():
     flat_list = [item for sublist in replay_ids for item in sublist]
     return flat_list
 
+def test_all():
+    logger = logging.getLogger(__name__)
+    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    logging.basicConfig(filename = 'logging_info.log', level=logging.INFO, force=True, format=log_fmt)
+    logger.info('starting pull')
+    minmax_rank_lst = [['bronze-1', 'bronze-3'], ['silver-1', 'silver-3'], ['gold-1', 'gold-3'], ['platinum-1', 'platinum-3'], ['diamond-1', 'diamond-3'], ['champion-1', 'champion-3'], ['champion-3', 'grand-champion']]
+    replay_ids = []
+    ids_pulled = []
+    for i in range(len(minmax_rank_lst)):
+        logger.info(f'pulling min_rank={minmax_rank_lst[i][0]}, max_rank = {minmax_rank_lst[i][1]}')
+        r = requests.get(f'https://ballchasing.com/api/replays?&count=200&playlist=ranked-standard&min-rank={minmax_rank_lst[i][0]}&max-rank={minmax_rank_lst[i][1]}', headers={'Authorization': 'gMXy4BUhXt0OQhc37kJV5KP0GUyLzhJeZhogpa94'})
+        d = r.json()
+        rank_ids = []
+        count = d['count']
+        next_link = d['next']
+        logger.info(f'count = {count}')
+        for pull in range(math.floor(count/200)-2):
+            logger.info(f'starting pull number {pull+1}')
+            r = requests.get(next_link, headers={'Authorization': 'gMXy4BUhXt0OQhc37kJV5KP0GUyLzhJeZhogpa94'})
+            d = r.json()
+            for i in range(len(d['list'])):
+                rank_ids.append(d['list'][i]['id'])
+            next_link = d['next']
+        logger.info('rank pull complete.. appending results and moving to next rank') 
+        replay_ids.append(rank_ids)
+
+    flat_list = [item for sublist in replay_ids for item in sublist]
+    return flat_list
