@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Submit Replay</h1>
+    <p style="color:red; font-weight:bold;">
+        Only single replay ID's are currently accepted.
+    </p>
+    <form action= "/handle_data" method="POST" id="replay_id" name='replay_id' novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.replay_id.label }}<br>
+            {{ form.replay_id(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    <p></p>
+    <img width="1400" height="600" src="{{url_for('static', filename='example1.png')}}"
+    align="middle" />    
+{% endblock %}

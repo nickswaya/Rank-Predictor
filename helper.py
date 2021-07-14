@@ -1,6 +1,56 @@
 import pandas as pd
 import math
 import logging
+import requests
+import requests
+import numpy as np
+from matplotlib import pyplot as plt
+import pandas as pd
+import numpy as np
+from collections import defaultdict
+from sklearn.neural_network import MLPClassifier, MLPRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from tensorflow.keras.datasets import mnist
+import tensorflow as tf
+from tensorflow.keras import layers
+from random import randrange, random
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, precision_score, recall_score, accuracy_score, plot_confusion_matrix
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
+from sklearn.ensemble import RandomForestClassifier, BaggingClassifier, RandomForestRegressor
+from sklearn.datasets import load_iris, load_wine
+from sklearn.tree import export_graphviz
+from IPython.display import Image
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
+from sklearn.linear_model import LinearRegression, LogisticRegression, Ridge
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import train_test_split, KFold, GridSearchCV
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor, plot_tree
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from helper import *
+import math
+import logging
+from retrying import retry
+import os
+import numpy as np
+import numpy.random as rand
+from itertools import islice
+from sklearn.ensemble import (GradientBoostingRegressor, GradientBoostingClassifier, AdaBoostClassifier,RandomForestClassifier)
+from sklearn.svm import SVC
+import sklearn.datasets as datasets
+import sklearn.model_selection as cv
+from sklearn.inspection import partial_dependence, plot_partial_dependence
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from pylab import rcParams
+import xgboost as xgb
+import joblib
+from sklearn.metrics import mean_absolute_error
+rcParams['figure.figsize'] = (12, 8)
+plt.style.use('ggplot')
 
 def remove_extra_element(row):
     if 'goals_against_while_last_defender' in row:
@@ -178,3 +228,67 @@ def test_all():
 
     flat_list = [item for sublist in replay_ids for item in sublist]
     return flat_list
+
+
+def create_frame_from_jsonv2(json_stats):
+    df = pd.DataFrame.from_dict(json_stats)
+    df['core'] = df.stats.apply(lambda x:x['core'])
+    df['boost'] = df.stats.apply(lambda x:x['boost'])
+    df['movement'] = df.stats.apply(lambda x:x['movement'])
+    df['positioning'] = df.stats.apply(lambda x:x['positioning'])
+    df['demo'] = df.stats.apply(lambda x:x['demo'])
+    df['mvp'] = df.mvp.apply(lambda x: 1 if x==True else 0)
+    camera_keys = list(df.iloc[0]['camera'].keys())
+    core_stats_keys = list(df.iloc[0]['stats']['core'].keys())
+    boost_keys = list(df.iloc[0]['stats']['boost'].keys())
+    movement_keys = list(df.iloc[0]['stats']['movement'].keys())
+    positioning_keys = ['avg_distance_to_ball', 'avg_distance_to_ball_possession',
+        'avg_distance_to_ball_no_possession', 'avg_distance_to_mates',
+        'time_defensive_third', 'time_neutral_third', 'time_offensive_third',
+        'time_defensive_half', 'time_offensive_half', 'time_behind_ball',
+        'time_infront_ball', 'time_most_back', 'time_most_forward',
+        'time_closest_to_ball', 'time_farthest_from_ball',
+        'percent_defensive_third', 'percent_offensive_third',
+        'percent_neutral_third', 'percent_defensive_half',
+        'percent_offensive_half', 'percent_behind_ball', 'percent_infront_ball',
+        'percent_most_back', 'percent_most_forward', 'percent_closest_to_ball',
+        'percent_farthest_from_ball']
+    demo_keys = list(df.iloc[0]['stats']['demo'].keys())
+    df[camera_keys] = pd.json_normalize(df['camera'])
+    df[core_stats_keys] = pd.json_normalize(df['core'])
+    df[boost_keys] = pd.json_normalize(df['boost'])
+    df[movement_keys] = pd.json_normalize(df['movement'])
+    df[demo_keys] = pd.json_normalize(df['demo'])
+
+    df['positioning'] = df.stats.apply(lambda x: remove_extra_element(x['positioning']))
+    df[positioning_keys] = pd.json_normalize(df['positioning'])
+    names = df['name']
+    df = df.drop(['camera', 'stats', 'camera', 'core', 'boost', 'movement', 'positioning', 'demo', 'start_time', 'end_time', 'id', 'name', 'car_id', 'car_name'], axis=1)
+    try:
+        df.drop('rank', axis=1)
+    except:
+        pass
+    return df, names
+
+def get_stats_from_replays_combined(replay_ids):
+    orange_stats = []
+    blue_stats = []
+    for replay_id in replay_ids:
+        replay_stats = requests.get(f'https://ballchasing.com/api/replays/{replay_id}', headers={'Authorization': 'gMXy4BUhXt0OQhc37kJV5KP0GUyLzhJeZhogpa94'})
+        test_stats = replay_stats.json()
+        try:
+            stats = [test_stats['orange']['players'][player] for player in range(3)]
+            orange_stats.append(stats[0])
+            orange_stats.append(stats[1])
+            orange_stats.append(stats[2])
+        except:
+            pass
+        try:
+            stats = [test_stats['blue']['players'][player] for player in range(3)]
+            blue_stats.append(stats[0])
+            blue_stats.append(stats[1])
+            blue_stats.append(stats[2])
+        except:
+            pass
+    stats = blue_stats + orange_stats
+    return stats

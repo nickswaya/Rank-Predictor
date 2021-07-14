@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<h3>This is a test</h3>
+
+<body>
+    <h1>Results:</h1>
+    {% for result in results %}
+    <div><p>{{ result }}</b></p></div>
+    {% endfor %}
+</body>
+
+{% endblock %}
