@@ -1,14 +1,31 @@
 <!doctype html>
 <html>
     <head>
-      {% if title %}
-      <title>{{ title }} - Microblog</title>
-      {% else %}
-      <title>Welcome to Microblog</title>
-      {% endif %}
+      <style>
+        body {background-color: powderblue;}
+        h1   {color: black;}
+        p    {color: black;}
+        img  {
+              border: 5px solid rgb(56, 55, 55);
+             }
+        </style>
+      
+      <title>{{ title }} - Rocket League Rank Predictor</title>
+      
     </head>
     <body>
-        <div>Capstone 2, Electric Boogaloo: <a href="/submit-replay">Home</a></div>
+        <div>
+          <h5>Rocket League Rank Predictor</h5><img width="300" height="150" style="float:right" src="{{url_for('static', filename='logo.jpg')}}"/>
+        </div>
+        <div>
+          <a href="/submit-replay">  Submit Replay ID</a>
+        </div>
+        <div>
+          <a href="/feature-importance"> Feature Importance</a>
+        </div>
+        <div>
+          <a href="/explanation"> How It Works</a>
+        </div>
         <hr>
         {% block content %}{% endblock %}
     </body>

@@ -72,9 +72,9 @@ def submit_replay():
 @app.route('/handle_data', methods=['GET', 'POST'])
 def handle_data():
     best_model = joblib.load('/home/nicks/Galvanize/projects/rocketleague/best_model')
-    rank_dict = {0 :'unranked', 1: 'bronze-1', 2:'bronze-2', 3: 'bronze-3', 4: 'silver-1', 5:'silver-2',  6:'silver-3', 7:
-    'gold-1', 8:'gold-2', 9:'gold-3', 10:'plat-1', 11:'plat-2', 12:'plat-3', 13:'diamond-1', 14:'diamond-2', 15:'diamond-3', 16: 'champ-1', 17:'champ-2', 18:'champ-3', 19:'grand-champ', 20: 'grand-champ'}
-    div_dict = {0.0:'division-1', 0.25:'division-2', 0.5:'division-3', 0.75:'division-4'}
+    rank_dict = {0 :'unranked', 1: 'Bronze 1', 2:'Bronze 2', 3: 'Bronze 3', 4: 'Silver 1', 5:'Silver 2',  6:'Silver 3', 7:
+    'Gold 1', 8:'Gold 2', 9:'Gold 3', 10:'Plat 1', 11:'Plat 2', 12:'Plat 3', 13:'Diamond 1', 14:'Diamond 2', 15:'Diamond 3', 16: 'Champ 1', 17:'Champ 2', 18:'Champ 3', 19:'Grand Champ', 20: 'Grand Champ', 21: 'SuperSonic Legend (Liklely Failed Prediction'}
+    div_dict = {0.0:'Division 1', 0.25:'Division 2', 0.5:'Division 3', 0.75:'Division 4'}
 
     a = request.form['replay_id']
     lst = []
@@ -89,7 +89,6 @@ def handle_data():
     div_round = [i%1 for i in div_remainder]
     names = [names[i] for i in range(len(names))]
     pred_output = [(names[i], rank_dict[preds_round[i]], div_dict[div_round[i]]) for i in range(len(preds))]
-    print(pred_output)
     # for i in range(len(preds)):
     #     print(f'Predicted rank for {names.iloc[i]} is {rank_dict[preds_round[i]], div_dict[div_round[i]]}')
     return render_template('results.html', title='Results', results = pred_output)
@@ -97,3 +96,11 @@ def handle_data():
 @app.route('/results', methods=['GET'])
 def results():
     return render_template('results.html', title='Home')
+
+@app.route('/feature-importance', methods=['GET'])
+def feature_importance():
+    return render_template('feature_importance.html')
+
+@app.route('/explanation', methods=['GET'])
+def explanation():
+    return render_template('explanation.html')

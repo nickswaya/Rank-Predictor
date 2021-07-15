@@ -7,8 +7,13 @@
 <body>
     <h1>Results:</h1>
     {% for result in results %}
-    <div><p>Name: {{ result[0] }}  - Prediction----> {{ result[1] }}_{{ result[2] }}</b></p></div>
-    {% endfor %}
+    <div>
+        <ul>
+        <li>Name: {{ result[0] }}  - Predicted rank is {{ result[1] }}  {{ result[2] }}</li>
+        </ul>
+    </div>
+        
+        {% endfor %}
 </body>
 
 {% endblock %}

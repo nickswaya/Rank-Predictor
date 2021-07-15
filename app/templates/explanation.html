@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<style>
+    img {
+    border: 5px solid rgb(56, 55, 55);
+    }
+    .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+    p {
+    font-size: 18px;
+    }
+    figure figcaption {
+    border: 1px dotted blue;
+    text-align: center;
+    font-size: 14px;
+    }
+    </style>
+
+<body>
+    <h1>The XGBoost Regressor Model</h1>
+    <h2>How it Works</h2>
+    <p>XGBoost is a popular implementation of the gradient boosted trees algorithm, a supervised learning method which predicts targets (such as Rocket League rank) based on a dataset's features.
+        The model first trains with 'weak learners' or regression trees. Each tree's decision is altered by the response of the previous tree, and errors are minimized through a gradient descent algorithim.
+    </p>
+    <h2>Why XGBoost Over a Neural Net?</h2>
+    <p>
+        Neural networks tend to outperform other algorithims when dealing in unstructured data, however, XGBoost is extemley powerful when trained on organized, tabular, small to medium sized datasets (such as the data pulled for this model).
+        A neural net was originally used to create this model, but results were less than satisfactory with a mean absolute error of 7 (on average the model predicted almost 8 divisions off the true value).
+        In comparison, the XGBoost model had a mean absolute error of 5. Additionally, XGBoost was much quicker to train and easier to tune.
+    </p>
+    <figure>
+    <img width="800" height="600" src="{{url_for('static', filename='performance.png')}}" class="center"/>
+    <figcaption>
+        <a href="https://towardsdatascience.com/https-medium-com-vishalmorde-xgboost-algorithm-long-she-may-rein-edd9f99be63d">https://towardsdatascience.com/https-medium-com-vishalmorde-xgboost-algorithm-long-she-may-rein-edd9f99be63d</a>
+    </figcaption>
+    </figure>
+</body>
+
+{% endblock %}

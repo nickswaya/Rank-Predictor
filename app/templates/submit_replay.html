@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+
+<style>
+    img {
+    border: 5px solid rgb(56, 55, 55);
+    }
+    </style>
     <h1>Submit Replay</h1>
     <p style="color:red; font-weight:bold;">
-        Only single replay ID's are currently accepted.
+        Only single replay 3v3 ID's are currently accepted.
     </p>
     <form action= "/handle_data" method="POST" id="replay_id" name='replay_id' novalidate>
         {{ form.hidden_tag() }}
@@ -13,9 +20,10 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
-    <h4>To Retreive a Match ID</h4>
-    <ul>Navigate to the ballchasing website and find the desired reply under "my replays"</ul>
-    <ul>Copy the Match ID found after 'replay/' in the URL</ul>
-    <img width="1400" height="600" src="{{url_for('static', filename='example1.png')}}"
-    align="middle" />    
+    <h4>To Retreive a Match ID:</h4>
+    <ul>
+    <li>Navigate to the ballchasing website and find the desired reply under "my replays"</li>
+    <li>Copy the Match ID found after 'replay/' in the URL</li>
+    </ul>
+    <img width="1000" height="554" src="{{url_for('static', filename='example1.png')}}"/>    
 {% endblock %}

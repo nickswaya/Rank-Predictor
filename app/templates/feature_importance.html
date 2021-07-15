@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<style>
+    img {
+    border: 5px solid rgb(56, 55, 55);
+    }
+    .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+    p {
+    font-size: 18px;
+    } 
+    </style>
+
+<body>
+    <h1 style="text-align:center">Feature Importance:</h1>
+    <p style="text-align:center">Which features such as <b>'shots on goal'</b> or <b>'average speed'</b> have the greatest influence on the model's prediction?</p>
+    <img width="800" height="600" src="{{url_for('static', filename='feature.png')}}"
+    class="center"/> 
+    <p style="text-align:center">Unsurprisingly, features related to moving fast are most influential when splitting between ranks.</p>
+{% endblock %}
