@@ -6,9 +6,10 @@ full_dummies.csv
 full_nodummies.csv
 up_to_diamond1.csv
 attempted_combined.csv
+lower_ranked_ids.csv
+
 #logging info
 logging_info.log
-
 #testing
 tester.ipynb
 

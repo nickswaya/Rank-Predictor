@@ -72,11 +72,11 @@ def create_frame_from_json(json_stats, rank_target):
     df[positioning_keys] = pd.json_normalize(df['positioning'])
     if rank_target == 'tier_div':
         df['rank_target'] = df['tier'] * 4 + df['division']
-        df = df.drop(['camera', 'stats', 'camera', 'rank', 'core', 'boost', 'movement', 'positioning', 'demo', 'start_time', 'end_time', 'name', 'id', 'car_id', 'tier', 'division'], axis=1)
+        df = df.drop(['camera', 'stats', 'camera', 'rank', 'core', 'boost', 'movement', 'positioning', 'demo', 'start_time', 'end_time', 'name', 'id', 'car_id', 'tier', 'division', 'car_name'], axis=1)
         return df
     if rank_target == 'tier':
         df['rank_target'] = df['id'] 
-        df = df.drop(['camera', 'stats', 'camera', 'rank', 'core', 'boost', 'movement', 'positioning', 'demo', 'start_time', 'end_time', 'name', 'id', 'car_id', 'tier', 'division'], axis=1)
+        df = df.drop(['camera', 'stats', 'camera', 'rank', 'core', 'boost', 'movement', 'positioning', 'demo', 'start_time', 'end_time', 'name', 'id', 'car_id', 'tier', 'division', 'car_name'], axis=1)
         return df
 
 def get_all_ids():
