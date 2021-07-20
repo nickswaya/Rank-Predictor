@@ -7,6 +7,16 @@ full_nodummies.csv
 up_to_diamond1.csv
 attempted_combined.csv
 lower_ranked_ids.csv
+lower_rank_to_36_000.csv
+#json info
+o.json
+c.json
+b.json
+b2.json
+b3.json
+o2.json
+o3.json
+example.json
 
 #logging info
 logging_info.log
